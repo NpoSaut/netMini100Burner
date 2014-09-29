@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Globalization;
-using System.IO;
-using LibUsbDotNet;
 using SautDnw;
 
 namespace FilePusher
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length < 2) PrintHelp();
 
             string fileName = args[0];
-            UInt16 startAddress = UInt16.Parse(args[1], NumberStyles.HexNumber);
+            uint startAddress = args.Length >= 2 ? UInt32.Parse(args[1], NumberStyles.HexNumber) : 0x20008000;
             Console.WriteLine("Файл: {0}", fileName);
             Console.WriteLine("Адрес: {0:X4}", startAddress);
             Console.WriteLine("Устанавливаем соединение с mini100");
-            using (var connection = S5Pc100UsbConnection.Establish())
+            using (S5Pc100UsbConnection connection = S5Pc100UsbConnection.Establish())
             {
                 Console.WriteLine("Передаём файл");
-                var package = DnwPacker.EnpackFile(fileName, startAddress);
+                DnwPackage package = DnwPacker.EnpackFile(fileName, startAddress);
                 connection.Write(package.GetBuff());
             }
             Console.WriteLine("Закончили");
+            Console.ReadLine();
         }
 
         private static void PrintHelp()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LibUsbDotNet;
+using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
 using SautDnw.Exceptions;
 
@@ -24,7 +25,7 @@ namespace SautDnw
         private static IUsbDevice GetDevice()
         {
             var ad = UsbDevice.AllDevices.ToList();
-            var deviceReg = UsbDevice.AllDevices.FirstOrDefault(dev => dev.Vid == Vid && dev.Pid == Pid);
+            var deviceReg = UsbDevice.AllDevices.OfType<LibUsbRegistry>().FirstOrDefault(dev => dev.Vid == Vid && dev.Pid == Pid);
             if (deviceReg == null) throw new ApplicationException("Оборудование не наидено");
 
             var device = deviceReg.Device;
