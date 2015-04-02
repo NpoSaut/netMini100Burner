@@ -22,7 +22,6 @@ namespace FilePusher
                 connection.Write(package.GetBuff());
             }
             Console.WriteLine("Закончили");
-            Console.ReadLine();
         }
 
         private static void PrintHelp()
